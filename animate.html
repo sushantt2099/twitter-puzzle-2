@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+	<head>
+		<title>circular animation</title>
+		<script>
+			var c;
+			var outerCircleRadius = 300;
+			var innerCircleRadius = 200;
+			var currentRadius = outerCircleRadius;
+			var centerX = 600;
+			var centerY = 300;
+			var steps = 500;
+			var currentStep = 0;
+			var dx = 300;
+			var dy = 200;
+			var decreasing = true;
+			var variation = 0;
+			
+			function init(){
+				c = document.getElementById("circle");
+				moveCircle(dx, dy);
+				rotateCircle();
+			}
+			
+			function moveCircle(x,  y){
+				c.style.left  = x + "px";
+				c.style.top = y + "px";
+			}
+			
+			function rotateCircle(){
+				if(currentStep > steps){
+					currentStep = 0;
+				}
+					calculateCordinate(200, currentStep);
+					getNextRadius()
+					moveCircle(dx, dy);
+					requestAnimFrame(rotateCircle, c);
+				
+			}
+			
+			function getNextRadius(){
+				
+				if(decreasing){
+					currentRadius = currentRadius - variation*(outerCircleRadius - innerCircleRadius)/steps;
+					variation = variation + 1;
+				}else{
+					currentRadius = currentRadius + variation*(outerCircleRadius - innerCircleRadius)/steps;
+					variation = variation - 1;
+				}
+				if(currentRadius < innerCircleRadius){
+					decreasing = false;
+				}
+				else if(currentRadius > outerCircleRadius){
+					decreasing = true;
+				}
+				currentStep = currentStep + 1;
+				return currentRadius;
+			}
+			function calculateCordinate(radius, step){
+				 dx = (centerX + radius * Math.cos(2 * Math.PI * step / steps));
+				 dy = (centerY + radius * Math.sin(2 * Math.PI * step / steps));
+			}
+			window.requestAnimFrame = (function(){
+				return window.requestAnimationFrame ||
+					   window.mozRequestAnimationFrame ||
+					   function( callback, element){
+						window.setTimeout(callback, 1000/60);
+					}
+			})();
+		</script>
+	</head>
+	<body onload="init()">
+		<div style="width: 100px;height: 100px; background: black;position: absolute;" id="circle"></div>
+			
+	</body>
+	
+</html>
