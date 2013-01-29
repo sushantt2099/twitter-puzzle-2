@@ -1,0 +1,55 @@
+/* reset browser styles */
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, variable, form, fieldset, blockquote, input, table{
+ padding: 0;
+ margin: 0;
+ font-size: 100%;
+ font-weight: normal;
+}
+ol { 
+  margin-left: 0; 
+  list-style: decimal; 
+}
+ul { 
+  margin-left: 0; 
+  list-style:square; 
+  list-style-type: none;
+}
+img,input, table{
+  border: 0;
+}
+/* end reset browser styles */
+
+html, body {
+	height: 100% ;
+	width: 100%;
+}
+/*html {
+	background-image: url('twitter_key.jpg');
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}*/
+h1 {
+	text-align: center;
+	font-size: 40px;
+	color: white;
+}
+#twitter-stars {
+	margin-right: 40px;
+	height: 100px;
+	width: 1150px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+}
+
+#twitter-stars .twitter-star{
+	background-color: red;
+	height: 110px;
+	width: 110px;
+	border-radius: 500px 500px 500px 500px;
+	display: inline;
+	float: left;
+	margin-left: 5px;
+    box-shadow: 0px 0px 25px -5px rgba(255, 255, 255, 0.7);
+
+}

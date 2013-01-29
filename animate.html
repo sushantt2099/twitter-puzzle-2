@@ -1,76 +1,114 @@
 <!DOCTYPE html>
 	<head>
 		<title>circular animation</title>
+		<script type="text/javascript" src="lib.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<script>
-			var c;
-			var outerCircleRadius = 300;
-			var innerCircleRadius = 200;
-			var currentRadius = outerCircleRadius;
-			var centerX = 600;
-			var centerY = 300;
-			var steps = 500;
-			var currentStep = 0;
-			var dx = 300;
-			var dy = 200;
-			var decreasing = true;
+			
+			var ballsCollection = [];
+			var TOTAL_BALLS = 10;
+			var center = {};
+			var mainBall;
+			var STEPS = 200;
+			var LOWER_RADIUS = 170;
+			var UPPER_RADIUS = 230;
+			var currentRadius = LOWER_RADIUS;
+			var decreasing = false;
 			var variation = 0;
-			
+			center.x = $(window).width()/2;
+			center.y = 1.2* $(window).height()/2;
 			function init(){
-				c = document.getElementById("circle");
-				moveCircle(dx, dy);
-				rotateCircle();
-			}
-			
-			function moveCircle(x,  y){
-				c.style.left  = x + "px";
-				c.style.top = y + "px";
-			}
-			
-			function rotateCircle(){
-				if(currentStep > steps){
-					currentStep = 0;
+				//generate and add ball to canvas
+				for(i = 0; i < TOTAL_BALLS; i++){	
+					ballsCollection[i] =  generateBallContainer({ x: 0, y: 0,}, 90, "black");
+					document.body.appendChild(ballsCollection[i].ball);
 				}
-					calculateCordinate(200, currentStep);
-					getNextRadius()
-					moveCircle(dx, dy);
-					requestAnimFrame(rotateCircle, c);
+				positionBalls(center, 170);
+				
+				//generate main ball and add
+				mainBall = generateBallContainer(center, 200, "black");
+				document.body.appendChild(mainBall.ball);
+				moveBall(mainBall, center);
+
+				//start rotating the balls
+				rotateAllBalls();
+
 				
 			}
+
+			function rotateAllBalls(){
+				//rotate each ball and repeat
+				for(i = 0; i < ballsCollection.length; i++){
+					rotateBall(ballsCollection[i], STEPS, currentRadius);
+				}
+				//repeat
+				getNextRadius();
+				requestAnimFrame(rotateAllBalls, "null");	
+
+			}
 			
+			
+			function positionBalls(center, radius){
+				var steps = 10;
+				for(i = 0; i < ballsCollection.length; i++){
+					ballsCollection[i].nextStep = i;
+					rotateBall(ballsCollection[i], steps, radius)
+					ballsCollection[i].nextStep = i*STEPS/10;
+				}
+
+			}
+			
+			function calculateCordinate(radius, step, steps){
+				var position = {}; 
+				 position.x = (center.x + radius * Math.cos((3*Math.PI/2) + (2 * Math.PI * step / steps)));
+				 position.y = (center.y + radius * Math.sin((3*Math.PI/2) + (2 * Math.PI * step / steps)));
+				 return position;
+			}
+
 			function getNextRadius(){
-				
 				if(decreasing){
-					currentRadius = currentRadius - variation*(outerCircleRadius - innerCircleRadius)/steps;
+					//alert(currentRadius);
+					currentRadius = currentRadius - variation*(UPPER_RADIUS - LOWER_RADIUS)/STEPS;
 					variation = variation + 1;
+					//alert(currentRadius);
 				}else{
-					currentRadius = currentRadius + variation*(outerCircleRadius - innerCircleRadius)/steps;
-					variation = variation - 1;
+					currentRadius = currentRadius + variation*(UPPER_RADIUS - LOWER_RADIUS)/STEPS;
+					variation = variation + 1;
 				}
-				if(currentRadius < innerCircleRadius){
+				if(currentRadius < LOWER_RADIUS){
 					decreasing = false;
+					variation = 1;
 				}
-				else if(currentRadius > outerCircleRadius){
+				else if(currentRadius > UPPER_RADIUS){
 					decreasing = true;
+					variation = 1;
 				}
-				currentStep = currentStep + 1;
 				return currentRadius;
 			}
-			function calculateCordinate(radius, step){
-				 dx = (centerX + radius * Math.cos(2 * Math.PI * step / steps));
-				 dy = (centerY + radius * Math.sin(2 * Math.PI * step / steps));
-			}
-			window.requestAnimFrame = (function(){
-				return window.requestAnimationFrame ||
-					   window.mozRequestAnimationFrame ||
-					   function( callback, element){
-						window.setTimeout(callback, 1000/60);
-					}
-			})();
+
+			window.requestAnimFrame = function( callback, element){
+						window.setTimeout(callback, 1000/20);
+					};
+		
 		</script>
 	</head>
-	<body onload="init()">
-		<div style="width: 100px;height: 100px; background: black;position: absolute;" id="circle"></div>
-			
+	<body  onload="init()" >
+		<h1>Yet Another Twitter Solution</h1>
+		<ul id="twitter-stars">
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+			<li class="twitter-star"><div></div></li>
+
+		</ul>
+		
 	</body>
 	
 </html>
